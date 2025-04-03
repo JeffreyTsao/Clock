@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Analog Clock</title>
+<style>
+  #clock-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    border: 2px solid black;
+    border-radius: 50%;
+    margin: 20px auto;
+  }
+
+  .number {
+    position: absolute;
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+  }
+  .smallnumber {
+    position: absolute;
+    font-size: 15px;
+    font-weight: normal;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    color: gray;
+  }
+
+  .hour-hand, .minute-hand, .second-hand {
+    position: absolute;
+    transform-origin: bottom center;
+    background-color: black;
+  }
+
+  .hour-hand {
+    width: 6px;
+    height: 80px;
+    top: 70px;
+    left: 147px;
+  }
+
+  .minute-hand {
+    width: 4px;
+    height: 120px;
+    top: 30px;
+    left: 148px;
+    background-color: gray;
+  }
+
+  .second-hand {
+    width: 2px;
+    height: 140px;
+    top: 10px;
+    left: 149px;
+    background-color: red;
+  }
+
+  #time-input {
+    display: block;
+    margin: 10px auto;
+  }
+
+  #draw-clock {
+    display: block;
+    margin: 10px auto;
+  }
+</style>
+</head>
+<body>
+
+<input type="time" id="time-input">
+<button id="draw-clock">Draw Clock</button>
+
+<div id="clock-container">
+
+<div class="smallnumber" style="top: 5px; left: 135px;">0</div>
+<div class="smallnumber" style="top: 22px; left: 200px;">5</div>
+<div class="smallnumber" style="top: 70px; left: 248px;">10</div>
+<div class="smallnumber" style="top: 135px; left: 265px;">15</div>
+<div class="smallnumber" style="top: 200px; left: 248px;">20</div>
+<div class="smallnumber" style="top: 248px; left: 200px;">25</div>
+<div class="smallnumber" style="top: 265px; left: 135px;">30</div>
+<div class="smallnumber" style="top: 248px; left: 70px;">35</div>
+<div class="smallnumber" style="top: 200px; left: 22px;">40</div>
+<div class="smallnumber" style="top: 135px; left: 5px;">45</div>
+<div class="smallnumber" style="top: 70px; left: 22px;">50</div>
+<div class="smallnumber" style="top: 22px; left: 70px;">55</div>
+
+<div class="number" style="top: 25px; left: 135px;">12</div>
+<div class="number" style="top: 40px; left: 190px;">1</div>
+<div class="number" style="top: 80px; left: 230px;">2</div>
+<div class="number" style="top: 135px; left: 245px;">3</div>
+<div class="number" style="top: 190px; left: 230px;">4</div>
+<div class="number" style="top: 230px; left: 190px;">5</div>
+<div class="number" style="top: 245px; left: 135px;">6</div>
+<div class="number" style="top: 230px; left: 80px;">7</div>
+<div class="number" style="top: 190px; left: 40px;">8</div>
+<div class="number" style="top: 135px; left: 25px;">9</div>
+<div class="number" style="top: 80px; left: 40px;">10</div>
+<div class="number" style="top: 40px; left: 80px;">11</div>
+
+
+  <div class="hour-hand" id="hour-hand"></div>
+  <div class="minute-hand" id="minute-hand"></div>
+  <div class="second-hand" id="second-hand"></div>
+</div>
+<div id="debug">
+</div>
+<script>
+  function drawClock(time) {
+    const hourHand = document.getElementById('hour-hand');
+    const minuteHand = document.getElementById('minute-hand');
+    const secondHand = document.getElementById('second-hand');
+
+    const [hours, minutes, seconds] = time.split(':').map(Number);
+    var seconds2 = seconds;
+    if (typeof seconds === "undefined") seconds2=0;
+   // document.getElementById('debug').innerHTML="["+hours + ":"+minutes+":"+seconds+"]";
+
+    const hourRotation = (hours % 12 + minutes / 60) * 30;
+    const minuteRotation = (minutes + seconds2 / 60) * 6;
+    const secondRotation = seconds2 * 6;
+
+    hourHand.style.transform = `rotate(${hourRotation}deg)`;
+    minuteHand.style.transform = `rotate(${minuteRotation}deg)`;
+    secondHand.style.transform = `rotate(${secondRotation}deg)`;
+     secondHand.style.display = ( (typeof seconds === "undefined") ? 'none' : 'inline');
+  }
+
+  document.getElementById('draw-clock').addEventListener('click', () => {
+    const timeInput = document.getElementById('time-input').value;
+    if (timeInput) {
+      drawClock(timeInput);
+    }
+  });
+
+  // Optional: Draw the current time when the page loads.
+  const now = new Date();
+  const currentTime = now.toLocaleTimeString('en-US', { hour12: false });
+  document.getElementById('time-input').value = currentTime;
+  drawClock(currentTime);
+</script>
+
+</body>
+</html>
